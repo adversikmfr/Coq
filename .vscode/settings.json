@@ -1,0 +1,10 @@
+{
+  "coqtop.binPath": "coqtop",
+  "coq.loadPath": [
+    {
+      "path": ".",
+      "recursive": true,
+      "as": "LF"
+    }
+  ]
+}
