@@ -6,6 +6,7 @@
 (* Suppress some annoying warnings from Coq: *)
 Set Warnings "-notation-overridden,-parsing,-deprecated-hint-without-locality".
 From LF Require Export Lists.
+From Coq Require Export String.
 
 Definition minustwo (n : nat) : nat :=
   match n with
@@ -1047,7 +1048,14 @@ Proof. reflexivity. Qed.
 Theorem fold_length_correct : forall X (l : list X),
   fold_length l = length l.
 Proof.
-(* FILL IN HERE *) Admitted.
+  intros X l.
+  induction l as [| x l' IHl'].
+  - simpl.
+    reflexivity.
+  - simpl.
+    rewrite <- IHl'.
+    reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 3 stars, standard (fold_map)
@@ -1055,15 +1063,25 @@ Proof.
     We can also define [map] in terms of [fold].  Finish [fold_map]
     below. *)
 
-Definition fold_map {X Y: Type} (f: X -> Y) (l: list X) : list Y
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition fold_map {X Y: Type} (f: X -> Y) (l: list X) : list Y :=
+  fold (fun x a => f x :: a) l [].
 
 (** Write down a theorem [fold_map_correct] stating that [fold_map] is
     correct, and prove it in Coq.  (Hint: again, remember that
     [reflexivity] simplifies expressions a bit more aggressively than
     [simpl].) *)
 
-(* FILL IN HERE *)
+Theorem fold_map_correct : forall (X Y : Type) (f : X -> Y) (l : list X),
+  fold_map f l = map f l.
+Proof.
+  intros X Y f l.
+  induction l as [| x l' IHl'].
+  - simpl. reflexivity.
+  - simpl.
+    rewrite <- IHl'.
+    simpl.
+    reflexivity.
+Qed.
 
 (* Do not modify the following line: *)
 Definition manual_grade_for_fold_map : option (nat*string) := None.
@@ -1101,8 +1119,10 @@ Definition prod_curry {X Y Z : Type}
     the theorems below to show that the two are inverses. *)
 
 Definition prod_uncurry {X Y Z : Type}
-  (f : X -> Y -> Z) (p : X * Y) : Z
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+  (f : X -> Y -> Z) (p : X * Y) : Z :=
+  match p with
+  | (x , y) => f x y
+  end.
 
 (** As a (trivial) example of the usefulness of currying, we can use it
     to shorten one of the examples that we saw above: *)
@@ -1121,13 +1141,19 @@ Theorem uncurry_curry : forall (X Y Z : Type)
                         x y,
   prod_curry (prod_uncurry f) x y = f x y.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros X Y Z f x y.
+  reflexivity.
+Qed.
 
 Theorem curry_uncurry : forall (X Y Z : Type)
                         (f : (X * Y) -> Z) (p : X * Y),
   prod_uncurry (prod_curry f) p = f p.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros X Y Z f p.
+  induction p.
+  simpl.
+  reflexivity.
+Qed.
 (** [] *)
 
 (** **** Exercise: 2 stars, advanced (nth_error_informal)
