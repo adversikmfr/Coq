@@ -15,7 +15,51 @@
 
 Set Warnings "-notation-overridden,-parsing,-deprecated-hint-without-locality".
 From LF Require Export Poly.
+From Coq Require Export String.
+Require Import List.
+Import ListNotations.
 
+Definition minustwo (n : nat) : nat :=
+  match n with
+  | O => O
+  | S O => O
+  | S (S n') => n'
+  end.
+
+Fixpoint even (n:nat) : bool :=
+  match n with
+  | O        => true
+  | S O      => false
+  | S (S n') => even n'
+  end.
+
+Fixpoint leb (n m : nat) : bool :=
+  match n with
+  | O => true
+  | S n' =>
+      match m with
+      | O => false
+      | S m' => leb n' m'
+      end
+  end.
+
+Fixpoint eqb (n m : nat) : bool :=
+  match n with
+  | O => match m with
+         | O => true
+         | S m' => false
+         end
+  | S n' => match m with
+            | O => false
+            | S m' => eqb n' m'
+            end
+  end.
+
+Notation "x =? y" := (eqb x y) (at level 70) : nat_scope.
+Notation "x <=? y" := (leb x y) (at level 70) : nat_scope.
+
+Definition odd (n:nat) : bool :=
+  negb (even n).
 (* ################################################################# *)
 (** * The [apply] Tactic *)
 
@@ -43,9 +87,7 @@ Proof.
     [apply] also works with _conditional_ hypotheses: *)
 
 Theorem silly2 : forall (n m o p : nat),
-  n = m ->
-  (n = m -> [n;o] = [m;p]) ->
-  [n;o] = [m;p].
+  n = m -> (n = m -> [n;o] = [m;p]) -> [n;o] = [m;p].
 Proof.
   intros n m o p eq1 eq2.
   apply eq2. apply eq1.  Qed.
@@ -77,7 +119,11 @@ Theorem silly_ex : forall p,
   even p = true ->
   odd (S p) = true.
 Proof.
-  (* FILL IN HERE *) Admitted.
+  intros p H1 H2 H3.
+  apply H2.
+  apply H1.
+  apply H3.
+Qed.
 (** [] *)
 
 (** To use the [apply] tactic, the (conclusion of the) fact

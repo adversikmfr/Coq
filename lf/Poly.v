@@ -1263,17 +1263,28 @@ Proof. reflexivity. Qed.
     => f^n x] as input, [scc] should produce [fun X f x => f^(n+1) x] as
     output. In other words, do it [n] times, then do it once more. *)
 
-Definition scc (n : cnat) : cnat
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition scc (n : cnat) : cnat :=
+(* fun (X : Type) (f : X -> X) (x : X) => x. *)
+  fun (X : Type) (f : X -> X) (x : X) => 
+    f (n X f x). 
 
 Example scc_1 : scc zero = one.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  simpl.
+  reflexivity.
+Qed.
 
 Example scc_2 : scc one = two.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  simpl.
+  reflexivity.
+Qed.
 
 Example scc_3 : scc two = three.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  simpl.
+  reflexivity.
+Qed.
 
 (** [] *)
 
@@ -1287,18 +1298,24 @@ Proof. (* FILL IN HERE *) Admitted.
     Hint: the "zero" argument to a Church numeral need not be just
     [x]. *)
 
-Definition plus (n m : cnat) : cnat
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition plus (n m : cnat) : cnat :=
+  fun (X : Type) (f : X -> X) (x : X) => 
+    n X f (m X f x).
 
 Example plus_1 : plus zero one = one.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  reflexivity.
+Qed.
 
 Example plus_2 : plus two three = plus three two.
-Proof. (* FILL IN HERE *) Admitted.
-
+Proof. 
+  reflexivity.
+Qed.
 Example plus_3 :
   plus (plus two two) three = plus one (plus three three).
-Proof. (* FILL IN HERE *) Admitted.
+Proof. 
+  reflexivity.
+Qed.
 
 (** [] *)
 
@@ -1316,17 +1333,24 @@ Proof. (* FILL IN HERE *) Admitted.
     which a type contains itself. So leave the type argument
     unchanged. *)
 
-Definition mult (n m : cnat) : cnat
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition mult (n m : cnat) : cnat :=
+  fun (X : Type) (f : X -> X) (x : X) => 
+    n X (m X f) x.
 
 Example mult_1 : mult one one = one.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  reflexivity.
+Qed.
 
 Example mult_2 : mult zero (plus three three) = zero.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  reflexivity.
+Qed.
 
 Example mult_3 : mult two three = plus three three.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  reflexivity.
+Qed.
 
 (** [] *)
 
@@ -1341,17 +1365,25 @@ Proof. (* FILL IN HERE *) Admitted.
     But again, you cannot pass [cnat] itself as the type argument.
     Finding the right type can be tricky. *)
 
-Definition exp (n m : cnat) : cnat
-  (* REPLACE THIS LINE WITH ":= _your_definition_ ." *). Admitted.
+Definition exp (n m : cnat) : cnat :=
+  fun (X : Type) (f : X -> X) (x : X) => 
+    m (X -> X) (n X) f x.
 
 Example exp_1 : exp two two = plus two two.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  reflexivity.
+Qed.
 
 Example exp_2 : exp three zero = one.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  reflexivity.
+Qed.
 
 Example exp_3 : exp three two = plus (mult two (mult two two)) one.
-Proof. (* FILL IN HERE *) Admitted.
+Proof.
+  reflexivity.
+Qed.
+
 
 (** [] *)
 
